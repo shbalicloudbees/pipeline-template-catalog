@@ -7,21 +7,15 @@ description: Test, Build and Deploy for Microblog Backend application
 parameters:
   - name: repoOwner
     type: string
-    displayName: Repository Owner
+    displayName: GitHub Organization
   - name: repository
     type: string
-    displayName: repository
+    displayName: GitHub Repository
+    defaultValue: simple-java-maven-app
   - name: githubCredentialId
     displayName: GitHub Credential ID
     type: CREDENTIALS
-  - name: gcpProject
-    type: string
-    displayName: GCP Project
-    defaultValue: cb-days-workshop
-  - name: deploymentDomain
-    type: string
-    displayName: Deployment Domain
-    defaultValue: v1.k8s.tel
+    defaultValue: cloudbees-ci-workshop-github-app
 multibranch:
   branchSource:
     github:
