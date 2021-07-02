@@ -10,8 +10,8 @@ parameters:
   - name: repository
     type: string
     displayName: GitHub Repository
-    # defaultValue: simple-java-maven-app
+    defaultValue: simple-java-maven-app
   - name: githubCredentialId
     displayName: GitHub Credential ID
     type: CREDENTIALS
-    # defaultValue: cloudbees-ci-workshop-github-app
+    defaultValue: cloudbees-ci-workshop-github-app
