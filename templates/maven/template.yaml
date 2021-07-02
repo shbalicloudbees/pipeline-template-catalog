@@ -15,29 +15,3 @@ parameters:
     displayName: GitHub Credential ID
     type: CREDENTIALS
     # defaultValue: cloudbees-ci-workshop-github-app
-multibranch:
-  markerFile: cloudbees-ci.yml 
-  branchSource:
-    github:
-      id: simple-java-maven-app
-      credentialsId: ${githubCredentialId}
-      repoOwner: ${repoOwner}
-      repository: ${repository}
-      traits:
-        - gitHubBranchDiscovery:
-            strategyId: 1
-        - gitHubPullRequestDiscovery:
-            strategyId: 1
-        - gitHubForkDiscovery:
-            strategyId: 1
-            trust:
-              $class: TrustPermission
-        - cloudBeesSCMReporting:
-            handlers:
-            - endBuildError:
-                maxLogLines: 120
-            - "warningsNG"
-            - "jacoco"
-            - stage:
-                verbosity: "failed"
-            - "junit"
