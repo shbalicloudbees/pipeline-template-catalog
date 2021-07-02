@@ -1,17 +1,31 @@
+  
 version: 1
 type: pipeline-template
-name: Maven Pipeline Template
+name: Maven LAST
 templateType: MULTIBRANCH
-description: Provides a pipeline template for maven builds.
+description: Test, Build and Deploy for Microblog Backend application
 parameters:
   - name: repoOwner
     type: string
-    displayName: GitHub Organization
+    displayName: Repository Owner
   - name: repository
     type: string
-    displayName: GitHub Repository
-    defaultValue: simple-java-maven-app
+    displayName: repository
   - name: githubCredentialId
     displayName: GitHub Credential ID
     type: CREDENTIALS
-    defaultValue: cloudbees-ci-workshop-github-app
+  - name: gcpProject
+    type: string
+    displayName: GCP Project
+    defaultValue: cb-days-workshop
+  - name: deploymentDomain
+    type: string
+    displayName: Deployment Domain
+    defaultValue: v1.k8s.tel
+multibranch:
+  branchSource:
+    github:
+      id: Python
+      credentialsId: ${githubCredentialId}
+      repoOwner: ${repoOwner}
+      repository: ${repository}
