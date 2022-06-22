@@ -16,6 +16,9 @@ parameters:
     displayName: GitHub Credential ID
     type: CREDENTIALS
     defaultValue: cloudbees-ci-workshop-github-app
+  - name: true_or_false
+    displayName: A boolean parameter
+    type: boolean
 multibranch:
   branchSource:
     github:
