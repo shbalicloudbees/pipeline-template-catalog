@@ -11,29 +11,11 @@ parameters:
   - name: repository
     type: string
     displayName: GitHub Repository
-    defaultValue: simple-java-maven-app
   - name: githubCredentialId
     displayName: GitHub Credential ID
     type: CREDENTIALS
-    defaultValue: cloudbees-ci-workshop-github-app
-  - name: podTemplate
-    displayName: Use Pod Template 
+  - name: agentType
+    displayName: Use Static Agent
     type: boolean
-    
-multibranch:
-  #markerFile: cloudbees-ci.yml 
-  branchSource:
-    github:
-      id: simple-java-maven-app
-      credentialsId: ${githubCredentialId}
-      repoOwner: ${repoOwner}
-      repository: ${repository}
-      traits:
-        - gitHubBranchDiscovery:
-            strategyId: 1
-        - gitHubPullRequestDiscovery:
-            strategyId: 1
-        - gitHubForkDiscovery:
-            strategyId: 1
-            trust:
-              $class: TrustPermission
+
+

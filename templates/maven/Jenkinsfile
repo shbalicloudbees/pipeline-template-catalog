@@ -1,88 +1,53 @@
-@Library('pipeline-library@master') _
+@Library('pipeline-library') _
 pipeline {
-  agent none
-  options {
-   timeout(time: 10, unit: 'MINUTES') 
-  }
-  stages {
-    stage('Agent') {
-      agent { label 'maven' }
-      stages {
-        stage("Set GitHub Branch Protection") {
-          when { 
-            anyOf {
-              expression { BUILD_NUMBER == "1" }
-              expression { BUILD_NUMBER == "2" }
-            }
-            branch 'pr-*'
-          }
-          steps {
-            gitHubBranchProtect(repoOwner, repository)
-          }
-        }
-        stage ('Build and Analysis') {
-          when {
-            beforeAgent true
-            anyOf {
-              branch 'main'
-              branch 'pr-*'
-            }
-          }
-          steps {
-            customYamlProps()
-            echo "jdk from cloudbee-ci.yml: ${jdk}"
-            echo "line coverage from cloudbees-ci.yml: ${lineCoverage}"
-            container ('maven') {
-              sh 'mvn -Duser.home=/var/maven -V -q -e clean verify -Dmaven.test.failure.ignore'
-            }
-          }
-          post {
-            always {
-              step([$class: 'JacocoPublisher', 
-                changeBuildStatus: true,
-                minimumLineCoverage: '${lineCoverage}',
-                runAlways: true
-              ])
-              recordIssues enabledForFailure: true,  tools: [java(), javaDoc()], aggregatingResults: 'true', id: 'java', name: 'Java'
-              recordIssues enabledForFailure: true, tool: errorProne(), healthy: 1, unhealthy: 20
-              recordIssues enabledForFailure: true, tools: [pmdParser(pattern: 'target/pmd.xml'),
-                spotBugs(pattern: 'target/spotbugsXml.xml')],
-                 qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
-              recordIssues enabledForFailure: true, tools: [checkStyle(pattern: 'target/checkstyle-result.xml'),
-                cpd(pattern: 'target/cpd.xml')]
-            }
-          }
-        }
-        stage ('Test') {
-          when {
-            anyOf {
-              branch 'main'
-              branch 'pr-*'
-            }
-          }
-          steps {
-             container ('maven') {
-               sh 'mvn -Duser.home=/var/maven -q test'
-             }
-          }
-          post {
-            always {
-              junit 'target/surefire-reports/*.xml'
-            }
-          }
-        }
-        stage ('Deliver') {
-          when {
-            beforeAgent true
-            branch 'main'
-          }
-          steps {
-            container ('maven') {
-              sh './jenkins/scripts/deliver.sh'
-            }
-          }
-        }
-      }
+  agent {
+    kubernetes {
+      yaml '''
+kind: Pod
+spec:
+  containers:
+    - name: maven
+      image: maven:3.5.4-jdk-8-slim
+      command: ["tail", "-f", "/dev/null"]
+      imagePullPolicy: Always
+      resources:
+        requests:
+          memory: "1Gi"
+          cpu: "500m"
+        limits:
+          memory: "1Gi"
+'''
+      defaultContainer 'maven'
     }
   }
+
+    stages {
+        stage('define agent'){
+            echo "${agentType}"
+        }
+        stage('Checkout') {
+            steps {
+              // git credentialsId: "${github_creds}" , url: "${github_repo}"
+              checkout([$class: 'GitSCM',
+                              branches: [[name: '*/master']],
+                              extensions: [],
+                              userRemoteConfigs: [[credentialsId: "${github_creds}", url: "${github_repo}" ]]])
+            }
+        }
+        stage('Build') {
+            steps {
+              sh 'mvn -B -DskipTests clean package'
+            }
+        }
+    }
+
+    post {
+      success {
+      sh 'echo "SUCCESSFUL BUILD, sending  email ..."'
+      }
+
+      failure {
+        sh 'echo "FAILED BUILD, sending  email ..."'
+      }
+    }
 }
