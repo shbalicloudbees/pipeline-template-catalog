@@ -1,25 +1,11 @@
 @Library('pipeline-library') _
+
+javaMaven  
+
+/**
 pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-kind: Pod
-spec:
-  containers:
-    - name: maven
-      image: maven:3.5.4-jdk-8-slim
-      command: ["tail", "-f", "/dev/null"]
-      imagePullPolicy: Always
-      resources:
-        requests:
-          memory: "1Gi"
-          cpu: "500m"
-        limits:
-          memory: "1Gi"
-'''
-      defaultContainer 'maven'
-    }
-  }
+
+configAgent 
 
     stages {
         stage('define agent') {
@@ -31,7 +17,7 @@ spec:
       steps {
         // git credentialsId: "${github_creds}" , url: "${github_repo}"
         checkout([$class: 'GitSCM',
-                              branches: [[name: '*/main']],
+                              branches: [[name: '*\/main']],
                               extensions: [],
                               userRemoteConfigs: [[credentialsId: "${github_creds}", url: "${github_repo}" ]]])
       }
@@ -53,3 +39,4 @@ spec:
       }
     }
 }
+*/
