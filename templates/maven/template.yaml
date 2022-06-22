@@ -10,6 +10,9 @@ parameters:
   - name: github_repo
     type: string
     displayName: GitHub HTTPS repo endpoint
+  - name: github_creds
+    displayName: GitHub Credentials ID
+    type: credentials
   - name: agentType
     displayName: Use Static Agent
     type: boolean

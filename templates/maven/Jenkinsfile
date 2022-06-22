@@ -33,7 +33,7 @@ spec:
         checkout([$class: 'GitSCM',
                               branches: [[name: '*/master']],
                               extensions: [],
-                              userRemoteConfigs: [[credentialsId: "${githubCredentialId}", url: "${github_repo}" ]]])
+                              userRemoteConfigs: [[credentialsId: "${github_creds}", url: "${github_repo}" ]]])
       }
         }
         stage('Build') {
