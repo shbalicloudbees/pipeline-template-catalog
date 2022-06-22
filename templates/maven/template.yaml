@@ -16,17 +16,10 @@ parameters:
     displayName: GitHub Credential ID
     type: CREDENTIALS
     defaultValue: cloudbees-ci-workshop-github-app
-  - name: true_or_false
-    displayName: A boolean parameter
+  - name: podTemplate
+    displayName: Use Pod Template 
     type: boolean
-multibranch:
-  branchSource:
-    github:
-      id: Python
-      credentialsId: ${githubCredentialId}
-      repoOwner: ${repoOwner}
-      repository: ${repository}
-
+    
 multibranch:
   #markerFile: cloudbees-ci.yml 
   branchSource:
