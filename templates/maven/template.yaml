@@ -4,15 +4,12 @@ type: pipeline-template
 name: Maven MQ
 description: Test, Build and Deploy for Microblog Backend application
 parameters:
-  - name: repoOwner
+  - name: emailRecipient
     type: string
-    displayName: GitHub Organization
-  - name: repository
+    displayName: Email address to be used for sending build notifications
+  - name: github_repo
     type: string
-    displayName: GitHub Repository
-  - name: githubCredentialId
-    displayName: GitHub Credential ID
-    type: CREDENTIALS
+    displayName: GitHub HTTPS repo endpoint
   - name: agentType
     displayName: Use Static Agent
     type: boolean
