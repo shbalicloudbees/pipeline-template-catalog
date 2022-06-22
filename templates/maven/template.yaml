@@ -1,8 +1,7 @@
   
 version: 1
 type: pipeline-template
-name: Maven LAST
-templateType: MULTIBRANCH
+name: Maven MQ
 description: Test, Build and Deploy for Microblog Backend application
 parameters:
   - name: repoOwner
