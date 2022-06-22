@@ -22,22 +22,24 @@ spec:
   }
 
     stages {
-        stage('define agent'){
-            echo "${agentType}"
+        stage('define agent') {
+      steps {
+        echo "${agentType}"
+      }
         }
         stage('Checkout') {
-            steps {
-              // git credentialsId: "${github_creds}" , url: "${github_repo}"
-              checkout([$class: 'GitSCM',
+      steps {
+        // git credentialsId: "${github_creds}" , url: "${github_repo}"
+        checkout([$class: 'GitSCM',
                               branches: [[name: '*/master']],
                               extensions: [],
                               userRemoteConfigs: [[credentialsId: "${github_creds}", url: "${github_repo}" ]]])
-            }
+      }
         }
         stage('Build') {
-            steps {
-              sh 'mvn -B -DskipTests clean package'
-            }
+      steps {
+        sh 'mvn -B -DskipTests clean package'
+      }
         }
     }
 
